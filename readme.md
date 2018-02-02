@@ -1,7 +1,7 @@
 # About the application-
 
-* The app is a fork of https://github.com/Rebilly/ReDoc with some little changes/additions made.
-* There is also a demo of how to run the app in chrome headless and capture network and tracing logs.
+* The app is a fork of https://github.com/Rebilly/ReDoc with some little changes/additions made;
+* There is also a demo of how to run the app in chrome headless and capture network and tracing logs;
 * The app is an "OpenAPI/Swagger-generated API Reference Documentation".
 
 # Requirements-
