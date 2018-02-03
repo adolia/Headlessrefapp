@@ -9,11 +9,9 @@
 * node 8.4.0+
 * npm 5.6.0+
 
-
 # Installation-
 
 * To install the dependencies, run ` npm install `.
-
 
 # Running and Testing-
 
