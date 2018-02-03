@@ -19,7 +19,7 @@ let config = {
       });
     });
   },
-  //directConnect: true,
+  directConnect: true,
   useAllAngular2AppRoots: true,
   allScriptsTimeout: 180000,
   jasmineNodeOpts: {
