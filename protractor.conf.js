@@ -29,7 +29,12 @@ let config = {
     print: function() {}
   },
   multiCapabilities: [
-    { browserName: 'chrome' }
+    { 
+        browserName: 'chrome',
+        chromeOptions: {
+          args: ["--headless", "--disable-gpu", "--window-size=800x600"]
+        }
+    }
     // { browserName: 'firefox' }
   ]
 };
