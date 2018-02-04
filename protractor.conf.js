@@ -45,6 +45,9 @@ if (travis) {
   config.sauceSeleniumAddres = 'localhost:4445/wd/hub';
   config.multiCapabilities = [{
     browserName: 'chrome',
+    chromeOptions: {
+      args: ["--headless", "--disable-gpu", "--window-size=800x600"]
+    },
     'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
     build: process.env.TRAVIS_BUILD_NUMBER,
     name: 'Redoc Chrome/Linux build ' + process.env.TRAVIS_BUILD_NUMBER
