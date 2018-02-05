@@ -6,7 +6,7 @@ const sleep = n => new Promise(resolve => setTimeout(resolve, n));
 const url = 'http://localhost:9000';
 
 (async function() {
-    const chrome = await puppeteer.launch();
+    const chrome = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
     const client = await cdp();
 
     try {
