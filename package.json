@@ -137,6 +137,7 @@
     "openapi-sampler": "^0.4.3",
     "perfect-scrollbar": "^0.8.1",
     "prismjs": "^1.8.1",
+    "puppeteer": "^1.0.0",
     "remarkable": "1.7.1",
     "scrollparent": "^2.0.1",
     "slugify": "^1.2.1",
