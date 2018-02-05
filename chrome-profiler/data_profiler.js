@@ -1,5 +1,4 @@
 const fs = require('fs');
-const chromeLauncher = require('chrome-launcher');
 const puppeteer = require('puppeteer');
 const cdp = require('chrome-remote-interface');
 
@@ -7,8 +6,8 @@ const sleep = n => new Promise(resolve => setTimeout(resolve, n));
 const url = 'http://localhost:9000';
 
 (async function() {
-  const chrome = await puppeteer.launch();;
-  const client = await cdp();
+    const chrome = await puppeteer.launch();
+    const client = await cdp();
 
     try {
         const {Network, Profiler, Memory, Page, Runtime} = client;
@@ -17,11 +16,13 @@ const url = 'http://localhost:9000';
         await Network.enable();
         await Profiler.enable();
         await Memory.enable();
+        const page = await browser.newPage();
+        await page.goto({url});
 
         // Set JS profiler sampling resolution to 100 microsecond (default is 1000)
         await Profiler.setSamplingInterval({interval: 100});
 
-        await Page.navigate({url});
+        //await Page.navigate({url});
         await client.on('Page.loadEventFired', async _ => {
           // on load we'll start profiling, kick off the test, and finish
           await Profiler.start();
@@ -38,7 +39,9 @@ const url = 'http://localhost:9000';
     } catch (err) {
         console.error(err);
     } finally {
-        exit()
+        console.log('Exit from profiling!');
+        await client.close();
+        await chrome.kill();
     }
 
   async function saveProfile(data, type) {
