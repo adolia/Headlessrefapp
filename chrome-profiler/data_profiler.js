@@ -45,7 +45,6 @@ const crm_api_url = 'https://api.apis.guru/v2/specs/data2crm.com/1/swagger.yaml'
         await page.click('#schema-url-form > button');
         await sleep(10000);
 
-
         await page.tracing.stop();
     };
 
