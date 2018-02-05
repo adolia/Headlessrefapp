@@ -2,6 +2,7 @@ const fs = require('fs');
 const puppeteer = require('puppeteer');
 
 const sleep = n => new Promise(resolve => setTimeout(resolve, n));
+
 const url = 'http://localhost:9000';
 const inst_api_url = 'https://api.apis.guru/v2/specs/instagram.com/1.0.0/swagger.yaml';
 const crm_api_url = 'https://api.apis.guru/v2/specs/data2crm.com/1/swagger.yaml';
