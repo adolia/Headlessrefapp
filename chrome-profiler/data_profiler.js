@@ -1,64 +1,56 @@
 const fs = require('fs');
 const puppeteer = require('puppeteer');
-const cdp = require('chrome-remote-interface');
 
 const sleep = n => new Promise(resolve => setTimeout(resolve, n));
 const url = 'http://localhost:9000';
+const inst_api_url = 'https://api.apis.guru/v2/specs/instagram.com/1.0.0/swagger.yaml';
+const crm_api_url = 'https://api.apis.guru/v2/specs/data2crm.com/1/swagger.yaml';
 
 (async function() {
-    const chrome = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
-    const client = await cdp();
+    const chrome = await puppeteer.launch({
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
 
     try {
-        const {Network, Profiler, Memory, Page, Runtime} = client;
-        // enable domains to get events.
-        await Page.enable();
-        await Network.enable();
-        await Profiler.enable();
-        await Memory.enable();
-        const page = await browser.newPage();
-        await page.goto({url});
+        const page = await chrome.newPage();
+        await testPage(page);
 
-        // Set JS profiler sampling resolution to 100 microsecond (default is 1000)
-        await Profiler.setSamplingInterval({interval: 100});
-
-        //await Page.navigate({url});
-        await client.on('Page.loadEventFired', async _ => {
-          // on load we'll start profiling, kick off the test, and finish
-          await Profiler.start();
-          await Memory.startSampling({samplingInterval: 100});
-
-          await Runtime.evaluate({expression: 'startTest();'});
-          await sleep(600);
-          const cpu_data = await Profiler.stop();
-          await Memory.stopSampling();
-          const mem_data = await Memory.getSamplingProfile();
-
-          saveProfiles(cpu_data, "cpu");
-        });
     } catch (err) {
         console.error(err);
     } finally {
         console.log('Exit from profiling!');
-        await client.close();
-        await chrome.kill();
+        await chrome.close();
     }
 
-  async function saveProfile(data, type) {
-    // data.profile described here: https://chromedevtools.github.io/devtools-protocol/tot/Profiler/#type-Profile
-    // Process the data however you wish… or,
-    // Use the JSON file, open Chrome DevTools, Menu, More Tools, JavaScript Profiler, `load`, view in the UI
-    const profile= `profiling-data/${type}profile-${Date.now()}.json`;
-    const string = JSON.stringify(data.profile, null, 4);
-    fs.writeFileSync(profile, string);
-    console.log('Done! Profile data saved to:', profile);
+    // Function to test page performance
+    async function testPage(page) {
+        const client = await page.target().createCDPSession();
+        await client.send('Network.enable');
+        await client.send('Performance.enable');
+        await client.send('Profiler.enable');
+        await client.send('HeapProfiler.enable');
 
-  }
-  // exit from profiling script
-  async function exit() {
-    console.log('Exit from profiling!');
-    await client.close();
-    await chrome.kill();
-  }
+        const profile = `./profiling-data/profile-${Date.now()}.json`;
+        await page.tracing.start({path: profile});
+
+        await page.goto(url);
+        await page.focus('#resources-nav > ul > side-menu-items > li:nth-child(1) > label');
+        await page.click('#resources-nav > ul > side-menu-items > li:nth-child(1) > label');
+        await sleep(5000);
+
+
+        await page.type('#schema-url-input', inst_api_url);
+        await page.waitForSelector('#schema-url-form > button');
+        await page.click('#schema-url-form > button');
+        await sleep(10000);
+
+        await page.type('#schema-url-input', crm_api_url);
+        await page.waitForSelector('#schema-url-form > button');
+        await page.click('#schema-url-form > button');
+        await sleep(10000);
+
+
+        await page.tracing.stop();
+    };
 
 })();
