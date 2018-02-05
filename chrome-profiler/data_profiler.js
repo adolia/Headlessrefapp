@@ -34,10 +34,6 @@ const crm_api_url = 'https://api.apis.guru/v2/specs/data2crm.com/1/swagger.yaml'
         await page.tracing.start({path: profile});
 
         await page.goto(url);
-        await page.focus('#resources-nav > ul > side-menu-items > li:nth-child(1) > label');
-        await page.click('#resources-nav > ul > side-menu-items > li:nth-child(1) > label');
-        await sleep(5000);
-
 
         await page.type('#schema-url-input', inst_api_url);
         await page.waitForSelector('#schema-url-form > button');
